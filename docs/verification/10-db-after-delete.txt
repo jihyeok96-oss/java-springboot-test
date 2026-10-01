@@ -1,0 +1,5 @@
+ remaining_test_board 
+----------------------
+                    0
+(1 row)
+

@@ -1,0 +1,5 @@
+10번 실제 HTTP MVC 점검
+POST http://localhost:18080/boards -> 302, Location=http://localhost:18080/boards
+생성 id=3
+POST http://localhost:18080/boards/3/delete -> 302, Location=http://localhost:18080/boards
+GET http://localhost:18080/boards/3 -> 404

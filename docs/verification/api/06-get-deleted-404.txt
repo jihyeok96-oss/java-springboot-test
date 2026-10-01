@@ -1,0 +1,19 @@
+10번 오류 대응 / get-deleted-404
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.4135640+09:00
+REQUEST
+GET http://localhost:18080/api/boards/2
+Accept: application/json
+
+(본문 없음)
+
+RESPONSE
+HTTP 404 
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Content-Type: application/json
+
+{"status":404,"message":"2번 게시글을 찾을 수 없습니다."}
+
+VERIFY
+PASS: HTTP 404 기대 / 실제 404
+PASS: 없는 글 오류 JSON은 status404 + message

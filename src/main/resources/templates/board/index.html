@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!--
+    [문항 4, 6, 7] 파일: templates/board/index.html
+    목적: 제목 포함 검색 결과와 전체 게시글 목록을 표시하고 등록/상세/수정/삭제로 연결한다.
+    수업 참고:
+    - spring-practice-ans / templates/board/list.html: GET 검색 폼, th:each, th:href, #temporals.format.
+      https://github.com/jihyeok96-oss/spring-practice-ans/blob/master/src/main/resources/templates/board/list.html
+    - mvclab / templates/members/list.html: 목록 관리 버튼과 #lists.isEmpty 빈 목록 처리.
+      https://github.com/jihyeok96-oss/mvclab/blob/main/src/main/resources/templates/members/list.html
+    - spring-practice-ans / templates/board/detail.html: POST 삭제 폼과 confirm 확인창.
+    - jihyeok96-oss.github.io / list.html: header/nav/main/table/caption의 HTML5 구조.
+      https://github.com/jihyeok96-oss/jihyeok96-oss.github.io/blob/main/list.html
+    평가문제는 Page 대신 전체 List를 요구하므로 페이징은 넣지 않고 boards를 반복한다.
+    경로는 수업의 /board/list 대신 문항 7에서 지정한 /boards에 맞춘다.
+-->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 목록</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="site-header">
+    <nav class="container navigation" aria-label="주 메뉴">
+        <a class="brand" th:href="@{/boards}">게시판</a>
+        <div class="navigation-links">
+            <a class="active" th:href="@{/boards}" aria-current="page">전체 글</a>
+            <a th:href="@{/boards/new}">글쓰기</a>
+        </div>
+    </nav>
+</header>
+<main class="container main-content">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">BOARD</p>
+            <h1>게시글 목록</h1>
+            <p class="subtitle">자유롭게 글을 작성하고 이야기를 나누세요.</p>
+        </div>
+        <!-- [문항 6, 7] GET /boards/new: 등록 폼으로 이동한다. -->
+        <a class="btn btn-primary" th:href="@{/boards/new}">+ 글 등록</a>
+    </div>
+
+    <!-- 등록/수정/삭제 리다이렉트 시 전달된 메시지가 있을 때만 표시한다. -->
+    <p class="notification" th:if="${message != null}" th:text="${message}">처리되었습니다.</p>
+
+    <section class="card search-card" aria-label="게시글 검색">
+        <!-- [문항 4, 7] keyword를 GET 쿼리로 보내 Repository의 제목 포함 검색에 연결한다. -->
+        <form class="search-form" th:action="@{/boards}" method="get">
+            <label for="keyword">제목 검색</label>
+            <input id="keyword" name="keyword" type="search" th:value="${keyword}"
+                   placeholder="검색할 제목을 입력하세요">
+            <div class="button-group">
+                <button class="btn btn-primary" type="submit">검색</button>
+                <a class="btn btn-light" th:href="@{/boards}">초기화</a>
+            </div>
+        </form>
+    </section>
+
+    <div class="list-summary">
+        <p>총 <strong th:text="${#lists.size(boards)}">0</strong>개의 게시글</p>
+        <p class="muted">최근 작성순 · 한국 시간</p>
+    </div>
+
+    <section class="card table-card" aria-label="게시글 목록">
+        <div class="table-container">
+            <table class="board-table">
+                <caption class="visually-hidden">게시글 번호, 제목, 작성자, 조회수, 작성일 및 관리</caption>
+                <thead>
+                <tr>
+                    <th scope="col" class="id-column">번호</th>
+                    <th scope="col" class="title-column">제목</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">조회수</th>
+                    <th scope="col">작성일</th>
+                    <th scope="col">관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- [문항 6] Board의 id/title/author/hits/createdAt을 표시한다. -->
+                <tr th:each="board : ${boards}">
+                    <td class="muted" th:text="${board.id}">1</td>
+                    <td class="title-column">
+                        <a class="title-link" th:href="@{/boards/{id}(id=${board.id})}"
+                           th:text="${board.title}">게시글 제목</a>
+                    </td>
+                    <td class="author-cell" th:text="${board.author}">작성자</td>
+                    <td th:text="${board.hits}">0</td>
+                    <!-- [문항 2, 3, 6] 서버가 관리하는 서울 시각을 수업 예제와 같은 형식으로 출력한다. -->
+                    <td class="date-cell" th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">
+                        작성일
+                    </td>
+                    <td>
+                        <div class="button-group table-actions">
+                            <a class="btn btn-small btn-light" th:href="@{/boards/{id}(id=${board.id})}">상세</a>
+                            <a class="btn btn-small btn-light" th:href="@{/boards/{id}/edit(id=${board.id})}">수정</a>
+                            <!-- [문항 7] 삭제는 GET 링크가 아닌 POST 요청으로 수행한다. -->
+                            <form th:action="@{/boards/{id}/delete(id=${board.id})}" method="post"
+                                  onsubmit="return confirm('이 게시글을 삭제하시겠습니까?');">
+                                <button class="btn btn-small btn-danger" type="submit">삭제</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <!--
+                    수업의 빈 목록 안내 방식: 검색 결과 0건도 같은 조건으로 처리한다.
+                    [수업 예제 외 추가] #strings.isEmpty로 검색어 유무를 검사하여 안내 문구를 구분한다.
+                    참고한 수업 화면에 없는 문자열 검사이므로 별도로 표시한다.
+                -->
+                <tr th:if="${#lists.isEmpty(boards)}">
+                    <td colspan="6">
+                        <div class="empty-message">
+                            <h2 th:text="${#strings.isEmpty(keyword) ? '아직 게시글이 없습니다.' : '검색 결과가 없습니다.'}">
+                                아직 게시글이 없습니다.
+                            </h2>
+                            <p th:text="${#strings.isEmpty(keyword) ? '첫 번째 이야기를 남겨보세요.' : '다른 검색어를 입력하거나 검색을 초기화해 주세요.'}">
+                                첫 번째 이야기를 남겨보세요.
+                            </p>
+                            <a class="btn btn-primary" th:href="@{/boards/new}">글 등록</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<footer class="site-footer"><p>게시판 · 서로의 생각을 나누는 공간</p></footer>
+</body>
+</html>

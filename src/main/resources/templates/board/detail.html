@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--
+    [문항 5, 6, 7, 10] 파일: templates/board/detail.html
+    목적: 조회수가 증가된 게시글의 내용/작성 정보와 수정/삭제/목록 이동 버튼을 표시한다.
+    수업 참고:
+    - spring-practice-ans / templates/board/detail.html: th:text, 날짜 포맷, POST 삭제, confirm.
+      https://github.com/jihyeok96-oss/spring-practice-ans/blob/master/src/main/resources/templates/board/detail.html
+    - spring-practice-ans / static/css/style.css: .board-content의 white-space: pre-wrap.
+    - ref-back / templates/qna/detail.html: 상세 정보와 하단 관리 버튼 배치.
+      https://github.com/jihyeok96-oss/ref-back/blob/master/src/main/resources/templates/qna/detail.html
+    th:text는 사용자가 입력한 HTML을 문자로 출력한다. 줄바꿈은 CSS로 보존한다.
+    조회수 증가/저장은 문항 5의 Service가 담당하고 이 화면은 반환된 hits만 표시한다.
+-->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${board.title} + ' - 게시판'">게시글 상세 - 게시판</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="site-header">
+    <nav class="container navigation" aria-label="주 메뉴">
+        <a class="brand" th:href="@{/boards}">게시판</a>
+        <div class="navigation-links">
+            <a th:href="@{/boards}">전체 글</a>
+            <a th:href="@{/boards/new}">글쓰기</a>
+        </div>
+    </nav>
+</header>
+<main class="container main-content detail-card">
+    <div class="page-header">
+        <div><p class="eyebrow">READ</p><h1>게시글 상세</h1></div>
+        <a class="text-link" th:href="@{/boards}">목록으로</a>
+    </div>
+    <p class="notification" th:if="${message != null}" th:text="${message}">처리되었습니다.</p>
+    <article class="card article-card">
+        <header class="article-header">
+            <p class="article-number">게시글 <span th:text="${board.id}">1</span></p>
+            <h2 th:text="${board.title}">게시글 제목</h2>
+            <!-- [문항 6] 생성/수정 시각과 증가된 조회수를 확인한다. -->
+            <div class="article-meta">
+                <p>작성자 <strong th:text="${board.author}">작성자</strong></p>
+                <p>조회수 <strong th:text="${board.hits}">1</strong></p>
+            </div>
+            <div class="article-dates">
+                <p>작성일 <span th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
+                <p>수정일 <span th:text="${#temporals.format(board.updatedAt, 'yyyy-MM-dd HH:mm')}">수정일</span></p>
+                <span class="muted">한국 시간</span>
+            </div>
+        </header>
+        <!--
+            [문항 6, 10] th:text로 HTML을 이스케이프하고 CSS에서 입력한 줄바꿈을 보존한다.
+            [수업 예제 외 추가] 선택 항목인 본문이 null/빈 문자열이면 #strings.isEmpty로 안내한다.
+        -->
+        <div class="article-body">
+            <div class="board-content" th:if="${!#strings.isEmpty(board.content)}" th:text="${board.content}">게시글 내용</div>
+            <p class="board-content muted" th:if="${#strings.isEmpty(board.content)}">작성된 내용이 없습니다.</p>
+        </div>
+        <div class="form-actions article-actions">
+            <a class="btn btn-light" th:href="@{/boards}">목록</a>
+            <div class="button-group">
+                <a class="btn btn-primary" th:href="@{/boards/{id}/edit(id=${board.id})}">수정</a>
+                <!-- [문항 7] 수업 예제처럼 confirm 후 POST /boards/{id}/delete로 삭제 요청한다. -->
+                <form th:action="@{/boards/{id}/delete(id=${board.id})}" method="post"
+                      onsubmit="return confirm('이 게시글을 삭제하시겠습니까?');">
+                    <button class="btn btn-danger" type="submit">삭제</button>
+                </form>
+            </div>
+        </div>
+    </article>
+</main>
+<footer class="site-footer"><p>게시판 · 서로의 생각을 나누는 공간</p></footer>
+</body>
+</html>

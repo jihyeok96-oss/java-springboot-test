@@ -1,0 +1,100 @@
+# [9번] board-api.http - Talend API Tester 또는 동등한 HTTP 도구의 REST 검증 요청.
+# [10번] 삭제 후 없는 id, JSON 문법 오류, 필수값 오류, id 형식 오류도 함께 확인한다.
+# 수업 참고: project1/NoticeRestController의 CRUD HTTP 매핑과 200/201/204 상태 코드.
+# https://github.com/jihyeok96-oss/project1/blob/main/backend/notice/src/main/java/com/oji/notice/controller/NoticeRestController.java
+# 수업 참고: ref-front/src/api/index.js의 Content-Type: application/json.
+# https://github.com/jihyeok96-oss/ref-front/blob/master/src/api/index.js
+# [수업 예제 외 추가] .http 요청 파일, 변수와 실행 순서/확인 항목은 평가 검증용으로 작성했다.
+# 이 파일을 저장하는 것만으로 요청이 실행되지는 않는다. 각 요청을 순서대로 실행한다.
+# Talend에서는 {{변수}} 대신 실제 URL과 POST 응답의 id를 입력한다.
+# 기본 실행은 8080. 별도 PostgreSQL 실검증은 baseUrl을 http://localhost:18080으로 변경한다.
+@baseUrl = http://localhost:8080
+# 반드시 아래 POST 등록 응답의 id로 변경한다. 0은 아직 등록 id를 지정하지 않았다는 표시다.
+# 기존 수업 게시글 id를 임의로 넣지 않고 이번 점검에서 생성한 글만 수정/삭제한다.
+@boardId = 0
+
+### [9번-01] GET 목록 -> 200 OK, JSON 배열. title/content/author/hits/createdAt/updatedAt 확인.
+GET {{baseUrl}}/api/boards
+Accept: application/json
+Content-Type: application/json
+
+### [9번-02] POST 등록 -> 201 Created, JSON Entity, Location: /api/boards/{생성 id}.
+# Body는 JSON으로 선택. hits 초기값 0, id 자동 생성, createdAt/updatedAt 자동 생성 확인.
+# 이 응답의 id를 위 boardId에 기록하고 createdAt도 저장한 후 다음 PUT을 실행한다.
+POST {{baseUrl}}/api/boards
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "9번 API 평가 게시글",
+  "content": "POST 등록 내용을 확인합니다.",
+  "author": "평가 작성자"
+}
+
+### [9번-03] PUT 수정 -> 200 OK. 같은 id/createdAt, 변경된 title/content/author 확인.
+# 서버 관리값 id/hits/createdAt/updatedAt은 요청 Body에 넣지 않는다.
+# PUT 자체는 조회수를 올리지 않는다. updatedAt은 수정 시각으로 자동 관리된다.
+PUT {{baseUrl}}/api/boards/{{boardId}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "9번 API 수정 게시글",
+  "content": "PUT으로 변경한 내용을 확인합니다.",
+  "author": "수정 작성자"
+}
+
+### [9번-04] GET 단건 -> 200 OK. PUT 내용과 hits 1 증가 확인.
+# 이전 PUT 응답보다 hits가 1 커져야 한다. 단건 GET을 반복하면 매번 1씩 증가한다.
+# hits도 Entity 수정이므로 updatedAt은 GET 상세 조회 때 갱신될 수 있다.
+GET {{baseUrl}}/api/boards/{{boardId}}
+Accept: application/json
+Content-Type: application/json
+
+### [9번-05] DELETE 삭제 -> 204 No Content. 응답 본문이 없는 것이 정상이다.
+DELETE {{baseUrl}}/api/boards/{{boardId}}
+Accept: application/json
+Content-Type: application/json
+
+### [10번-01] 삭제한 글 재조회 -> 404 Not Found, {status:404,message:...} JSON.
+GET {{baseUrl}}/api/boards/{{boardId}}
+Accept: application/json
+Content-Type: application/json
+
+### [10번-02] JSON 문법 오류 -> 400 Bad Request. 일부러 마지막 닫는 중괄호를 누락했다.
+# 이 Body의 문법 오류는 평가용이다. 정상 등록 JSON과 혼동하지 않는다.
+POST {{baseUrl}}/api/boards
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "잘못된 JSON",
+  "content": "마지막 중괄호가 없는 요청",
+  "author": "평가 작성자"
+
+### [10번-03] 필수값 title이 공백 -> 400 Bad Request. JSON 문법은 올바르지만 검증 실패.
+# 해당 요청으로 새로운 게시글이 DB에 저장되지 않았는지 목록/SQL로 확인한다.
+POST {{baseUrl}}/api/boards
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "   ",
+  "content": "필수값 검증을 확인합니다.",
+  "author": "평가 작성자"
+}
+
+### [10번-04] Long으로 바꿀 수 없는 id -> 400 Bad Request, 숫자 id 안내 JSON.
+GET {{baseUrl}}/api/boards/abc
+Accept: application/json
+Content-Type: application/json
+
+### [4·9·10번 추가 점검] 제목 포함 검색 -> 200 OK. 제목 포함 및 createdAt 내림차순 확인.
+GET {{baseUrl}}/api/boards?keyword=API
+Accept: application/json
+Content-Type: application/json
+
+### [9·10번 최종 점검] 삭제 후 목록 -> 200 OK. 삭제된 boardId가 배열에 없어야 한다.
+GET {{baseUrl}}/api/boards
+Accept: application/json
+Content-Type: application/json

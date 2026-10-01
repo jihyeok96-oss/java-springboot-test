@@ -1,0 +1,612 @@
+@charset "UTF-8";
+
+/*
+ * [문항 6, 10] 파일: static/css/style.css
+ * 목적: 목록/입력/상세/오류 화면에 공통 스타일과 모바일 레이아웃을 적용한다.
+ * 수업 참고:
+ * - jihyeok96-oss.github.io / main.css: 기본 폰트, 밝은 배경, 흰 카드, 파란 버튼,
+ *   flex 배치, table, @media와 focus-visible 접근성 스타일.
+ *   https://github.com/jihyeok96-oss/jihyeok96-oss.github.io/blob/main/main.css
+ * - mvclab / static/css/style.css: table-container, form-card, detail-card, empty-message.
+ *   https://github.com/jihyeok96-oss/mvclab/blob/main/src/main/resources/static/css/style.css
+ * - spring-practice-ans / static/css/style.css: board-content 줄바꿈 보존과 긴 단어 줄바꿈.
+ *   https://github.com/jihyeok96-oss/spring-practice-ans/blob/master/src/main/resources/static/css/style.css
+ * [수업 예제 외 추가] Bootstrap/Bulma CDN 없이 실행되도록 공통 버튼과 카드 스타일을
+ * 직접 정의했다. CSS 문법은 수업의 HTML5 게시판 예제에서 사용한 범위로 구성했다.
+ */
+
+/* 전체 및 기본 요소 */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #253047;
+    background-color: #f5f7fa;
+}
+
+h1, h2, p {
+    margin: 0;
+}
+
+h1, h2 {
+    color: #172238;
+    line-height: 1.35;
+    word-break: break-word;
+}
+
+h1 {
+    font-size: 30px;
+    letter-spacing: -1px;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button, input, textarea {
+    font: inherit;
+}
+
+button, a {
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.container {
+    width: min(1160px, calc(100% - 48px));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.main-content {
+    min-height: calc(100vh - 196px);
+    padding-top: 48px;
+    padding-bottom: 64px;
+}
+
+/* 상단 메뉴 및 페이지 제목 */
+.site-header {
+    color: #fff;
+    background-color: #172b4d;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 72px;
+}
+
+.brand {
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.navigation-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    font-size: 14px;
+}
+
+.navigation-links a {
+    color: #c5d1e4;
+}
+
+.navigation-links a:hover, .navigation-links .active {
+    color: #fff;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.eyebrow {
+    margin-bottom: 6px;
+    color: #366ad6;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    margin-top: 9px;
+    color: #67748a;
+}
+
+.muted {
+    color: #738096;
+}
+
+.text-link {
+    color: #366ad6;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.text-link:hover, .title-link:hover {
+    text-decoration: underline;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #e2e7ef;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(24, 43, 77, 0.03);
+}
+
+.notification {
+    margin-bottom: 22px;
+    padding: 14px 18px;
+    color: #236442;
+    background-color: #edf8f0;
+    border: 1px solid #cbe7d5;
+    border-radius: 8px;
+}
+
+/* 수업의 버튼/폼 배치 방식을 공통 클래스로 정의 */
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 42px;
+    padding: 9px 20px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #2d63d5;
+}
+
+.btn-primary:hover {
+    background-color: #2453b6;
+}
+
+.btn-light {
+    color: #4c5b71;
+    background-color: #fff;
+    border-color: #dce3ed;
+}
+
+.btn-light:hover {
+    background-color: #f0f4f9;
+}
+
+.btn-danger {
+    color: #b33942;
+    background-color: #fff;
+    border-color: #edcdd1;
+}
+
+.btn-danger:hover {
+    background-color: #fff1f2;
+}
+
+.btn-small {
+    min-height: 31px;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.button-group form {
+    margin: 0;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 11px 14px;
+    color: #253047;
+    background-color: #fff;
+    border: 1px solid #d8e0eb;
+    border-radius: 7px;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #919baa;
+}
+
+input:focus, textarea:focus {
+    border-color: #2d63d5;
+    outline: 2px solid #e0eaff;
+}
+
+a:focus-visible, button:focus-visible {
+    outline: 3px solid rgba(45, 99, 213, 0.35);
+    outline-offset: 3px;
+}
+
+/* [문항 4, 6] 검색과 게시글 표 */
+.search-card {
+    padding: 22px 26px;
+}
+
+.search-form {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.search-form label {
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.search-form input {
+    flex: 1;
+    min-width: 0;
+}
+
+.list-summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 26px 2px 12px;
+    font-size: 13px;
+}
+
+.list-summary strong {
+    color: #2d63d5;
+}
+
+.table-card {
+    overflow: hidden;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.board-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.board-table th, .board-table td {
+    padding: 18px 16px;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.board-table th {
+    color: #526078;
+    background-color: #f8fafc;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.board-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.board-table tbody tr:hover {
+    background-color: #fbfcfe;
+}
+
+.board-table .id-column {
+    width: 70px;
+}
+
+.board-table .title-column {
+    text-align: left;
+}
+
+.title-link {
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.author-cell {
+    max-width: 150px;
+    overflow-wrap: break-word;
+}
+
+.date-cell {
+    color: #738096;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.table-actions {
+    justify-content: center;
+}
+
+.empty-message {
+    padding: 58px 16px;
+    text-align: center;
+}
+
+.empty-message h2 {
+    font-size: 20px;
+}
+
+.empty-message p {
+    margin-top: 8px;
+    margin-bottom: 22px;
+    color: #738096;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+/* [문항 6, 10] 등록/수정 폼과 검증 오류 */
+.form-card {
+    max-width: 820px;
+}
+
+.editor-card {
+    padding: 32px;
+}
+
+.form-introduction {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 24px;
+    font-size: 12px;
+    color: #738096;
+}
+
+.field {
+    margin-bottom: 25px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.author-field {
+    max-width: 350px;
+}
+
+.required-mark, .field-error {
+    color: #bc3440;
+}
+
+.optional-label {
+    margin-left: 5px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #738096;
+}
+
+.field-error {
+    margin-top: 6px;
+    font-size: 13px;
+}
+
+textarea {
+    min-height: 280px;
+    resize: vertical;
+    line-height: 1.8;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #edf0f5;
+}
+
+/* [문항 5, 6] 상세 및 게시글 내용 */
+.detail-card {
+    max-width: 960px;
+}
+
+.article-header {
+    padding: 32px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.article-number {
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #738096;
+}
+
+.article-header h2 {
+    font-size: 28px;
+    letter-spacing: -0.6px;
+}
+
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #738096;
+}
+
+.article-meta strong {
+    margin-left: 7px;
+    color: #43516a;
+}
+
+.article-dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #738096;
+}
+
+.article-dates span {
+    margin-left: 5px;
+}
+
+.article-body {
+    padding: 32px;
+}
+
+.board-content {
+    min-height: 280px;
+    font-size: 16px;
+    line-height: 1.9;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.article-actions {
+    margin: 0;
+    padding: 24px 32px;
+}
+
+/* [문항 10] 400/404 오류 화면 */
+.error-card {
+    max-width: 760px;
+    padding-top: 80px;
+}
+
+.error-message {
+    padding: 54px 32px;
+    text-align: center;
+}
+
+.error-code {
+    margin-bottom: 12px;
+    color: #2d63d5;
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.error-message .btn {
+    margin-top: 28px;
+}
+
+.site-footer {
+    padding: 24px;
+    color: #8994a7;
+    border-top: 1px solid #e7ecf3;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* 수업의 @media 방식으로 작은 화면에서 검색/폼 배치를 변경한다.
+   문항 6의 목록 필수 열은 숨기지 않고 가로 스크롤로 모두 확인할 수 있게 한다. */
+@media (max-width: 768px) {
+    .container {
+        width: calc(100% - 32px);
+    }
+
+    .main-content {
+        padding-top: 32px;
+        padding-bottom: 40px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .page-header {
+        align-items: flex-start;
+        margin-bottom: 24px;
+    }
+
+    .search-card, .editor-card, .article-header, .article-body {
+        padding: 24px;
+    }
+
+    .search-form {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .search-form label {
+        width: 100%;
+    }
+
+    .board-table {
+        min-width: 850px;
+    }
+
+    .article-header h2 {
+        font-size: 24px;
+    }
+
+    .article-actions {
+        padding: 20px 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navigation {
+        min-height: 64px;
+    }
+
+    .navigation-links {
+        gap: 18px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+    }
+
+    .page-header {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .search-form input {
+        flex-basis: 100%;
+    }
+
+    .list-summary {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .editor-card, .article-header, .article-body {
+        padding: 20px;
+    }
+
+    .form-introduction, .form-actions {
+        flex-wrap: wrap;
+    }
+
+    .form-actions .button-group {
+        margin-left: auto;
+    }
+
+    .error-message {
+        padding: 40px 20px;
+    }
+}

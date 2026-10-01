@@ -1,0 +1,24 @@
+9번 REST CRUD / put-update
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.2302740+09:00
+REQUEST
+PUT http://localhost:18080/api/boards/2
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+Content-Length: 135
+
+{"author":"API 수정 검증","title":"9번 API 검증 - 7de958361a6147cf909da64a66166b3c 수정","content":"실제 PUT 수정 검증"}
+
+RESPONSE
+HTTP 200 
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Content-Type: application/json
+
+{"id":2,"title":"9번 API 검증 - 7de958361a6147cf909da64a66166b3c 수정","content":"실제 PUT 수정 검증","author":"API 수정 검증","hits":0,"createdAt":"2026-10-01T10:01:44.149847+09:00","updatedAt":"2026-10-01T10:01:44.2201697+09:00"}
+
+VERIFY
+PASS: HTTP 200 기대 / 실제 200
+PASS: 수정 시 기존 id 보존
+PASS: title/content/author 수정 반영
+PASS: 수정 시 조회수 보존
+PASS: 수정 시 기존 생성일시 보존(정밀도 오차 1마이크로초 이하)

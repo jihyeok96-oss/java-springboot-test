@@ -1,0 +1,290 @@
+{
+  "question": "9번 HTTP API 검증 / 10번 오류 및 실제 저장 검증",
+  "startedAt": "2026-10-01T10:01:43.9509589+09:00",
+  "finishedAt": "2026-10-01T10:01:44.4920292+09:00",
+  "baseUrl": "http://localhost:18080",
+  "passed": true,
+  "failure": null,
+  "requestCount": 9,
+  "databaseEvidence": {
+    "executed": true,
+    "passed": true,
+    "id": 2,
+    "file": "C:\\jh\\spring\\ch09\\board\\docs\\verification\\api\\10-postgresql-insert-evidence.txt",
+    "sql": "SELECT id, title, content, author, hits, created_at, updated_at FROM board_exam_ch09.board WHERE id=2;"
+  },
+  "requests": [
+    {
+      "question": "9번 REST CRUD",
+      "step": 1,
+      "name": "get-list",
+      "time": "2026-10-01T10:01:44.0398564+09:00",
+      "method": "GET",
+      "url": "http://localhost:18080/api/boards",
+      "requestHeaders": {
+        "Accept": "application/json"
+      },
+      "requestBody": "",
+      "expectedStatus": 200,
+      "responseStatus": 200,
+      "responseReason": "",
+      "responseHeaders": {
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 01 Oct 2026 01:01:44 GMT",
+        "Content-Type": "application/json"
+      },
+      "responseBody": "[]",
+      "elapsedMs": 82,
+      "checks": [
+        "PASS: HTTP 200 기대 / 실제 200",
+        "PASS: 목록 응답은 JSON 배열"
+      ],
+      "passed": true,
+      "file": "C:\\jh\\spring\\ch09\\board\\docs\\verification\\api\\01-get-list.txt"
+    },
+    {
+      "question": "9번 REST CRUD",
+      "step": 2,
+      "name": "post-create",
+      "time": "2026-10-01T10:01:44.1816454+09:00",
+      "method": "POST",
+      "url": "http://localhost:18080/api/boards",
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Length": "122"
+      },
+      "requestBody": "{\"author\":\"API 검증\",\"title\":\"9번 API 검증 - 7de958361a6147cf909da64a66166b3c\",\"content\":\"실제 POST 등록 검증\"}",
+      "expectedStatus": 201,
+      "responseStatus": 201,
+      "responseReason": "",
+      "responseHeaders": {
+        "Location": "/api/boards/2",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 01 Oct 2026 01:01:44 GMT",
+        "Content-Type": "application/json"
+      },
+      "responseBody": "{\"id\":2,\"title\":\"9번 API 검증 - 7de958361a6147cf909da64a66166b3c\",\"content\":\"실제 POST 등록 검증\",\"author\":\"API 검증\",\"hits\":0,\"createdAt\":\"2026-10-01T10:01:44.1498469+09:00\",\"updatedAt\":\"2026-10-01T10:01:44.1498469+09:00\"}",
+      "elapsedMs": 91,
+      "checks": [
+        "PASS: HTTP 201 기대 / 실제 201",
+        "PASS: 서버가 Long id를 자동 생성",
+        "PASS: 한글 요청값이 UTF-8 JSON으로 저장",
+        "PASS: 등록 조회수는 0",
+        "PASS: 생성일시는 서울 시간 +09:00",
+        "PASS: 201 Location에 생성된 API 주소 포함"
+      ],
+      "passed": true,
+      "file": "C:\\jh\\spring\\ch09\\board\\docs\\verification\\api\\02-post-create.txt"
+    },
+    {
+      "question": "9번 REST CRUD",
+      "step": 3,
+      "name": "put-update",
+      "time": "2026-10-01T10:01:44.2302740+09:00",
+      "method": "PUT",
+      "url": "http://localhost:18080/api/boards/2",
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Length": "135"
+      },
+      "requestBody": "{\"author\":\"API 수정 검증\",\"title\":\"9번 API 검증 - 7de958361a6147cf909da64a66166b3c 수정\",\"content\":\"실제 PUT 수정 검증\"}",
+      "expectedStatus": 200,
+      "responseStatus": 200,
+      "responseReason": "",
+      "responseHeaders": {
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 01 Oct 2026 01:01:44 GMT",
+        "Content-Type": "application/json"
+      },
+      "responseBody": "{\"id\":2,\"title\":\"9번 API 검증 - 7de958361a6147cf909da64a66166b3c 수정\",\"content\":\"실제 PUT 수정 검증\",\"author\":\"API 수정 검증\",\"hits\":0,\"createdAt\":\"2026-10-01T10:01:44.149847+09:00\",\"updatedAt\":\"2026-10-01T10:01:44.2201697+09:00\"}",
+      "elapsedMs": 15,
+      "checks": [
+        "PASS: HTTP 200 기대 / 실제 200",
+        "PASS: 수정 시 기존 id 보존",
+        "PASS: title/content/author 수정 반영",
+        "PASS: 수정 시 조회수 보존",
+        "PASS: 수정 시 기존 생성일시 보존(정밀도 오차 1마이크로초 이하)"
+      ],
+      "passed": true,
+      "file": "C:\\jh\\spring\\ch09\\board\\docs\\verification\\api\\03-put-update.txt"
+    },
+    {
+      "question": "9번 REST CRUD",
+      "step": 4,
+      "name": "get-detail",
+      "time": "2026-10-01T10:01:44.2692300+09:00",
+      "method": "GET",
+      "url": "http://localhost:18080/api/boards/2",
+      "requestHeaders": {
+        "Accept": "application/json"
+      },
+      "requestBody": "",
+      "expectedStatus": 200,
+      "responseStatus": 200,
+      "responseReason": "",
+      "responseHeaders": {
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 01 Oct 2026 01:01:44 GMT",
+        "Content-Type": "application/json"
+      },
+      "responseBody": "{\"id\":2,\"title\":\"9번 API 검증 - 7de958361a6147cf909da64a66166b3c 수정\",\"content\":\"실제 PUT 수정 검증\",\"author\":\"API 수정 검증\",\"hits\":1,\"createdAt\":\"2026-10-01T10:01:44.149847+09:00\",\"updatedAt\":\"2026-10-01T10:01:44.261901+09:00\"}",
+      "elapsedMs": 7,
+      "checks": [
+        "PASS: HTTP 200 기대 / 실제 200",
+        "PASS: 상세에서 수정 결과 확인",
+        "PASS: 단건 조회로 조회수가 정확히 1 증가",
+        "PASS: DB 재조회 후 생성/수정일시도 +09:00"
+      ],
+      "passed": true,
+      "file": "C:\\jh\\spring\\ch09\\board\\docs\\verification\\api\\04-get-detail.txt"
+    },
+    {
+      "question": "9번 REST CRUD",
+      "step": 5,
+      "name": "delete-board",
+      "time": "2026-10-01T10:01:44.3937493+09:00",
+      "method": "DELETE",
+      "url": "http://localhost:18080/api/boards/2",
+      "requestHeaders": {
+        "Accept": "application/json"
+      },
+      "requestBody": "",
+      "expectedStatus": 204,
+      "responseStatus": 204,
+      "responseReason": "",
+      "responseHeaders": {
+        "Date": "Thu, 01 Oct 2026 01:01:44 GMT"
+      },
+      "responseBody": "",
+      "elapsedMs": 6,
+      "checks": [
+        "PASS: HTTP 204 기대 / 실제 204",
+        "PASS: 204 삭제 응답에는 본문 없음"
+      ],
+      "passed": true,
+      "file": "C:\\jh\\spring\\ch09\\board\\docs\\verification\\api\\05-delete-board.txt"
+    },
+    {
+      "question": "10번 오류 대응",
+      "step": 6,
+      "name": "get-deleted-404",
+      "time": "2026-10-01T10:01:44.4135640+09:00",
+      "method": "GET",
+      "url": "http://localhost:18080/api/boards/2",
+      "requestHeaders": {
+        "Accept": "application/json"
+      },
+      "requestBody": "",
+      "expectedStatus": 404,
+      "responseStatus": 404,
+      "responseReason": "",
+      "responseHeaders": {
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 01 Oct 2026 01:01:44 GMT",
+        "Content-Type": "application/json"
+      },
+      "responseBody": "{\"status\":404,\"message\":\"2번 게시글을 찾을 수 없습니다.\"}",
+      "elapsedMs": 16,
+      "checks": [
+        "PASS: HTTP 404 기대 / 실제 404",
+        "PASS: 없는 글 오류 JSON은 status404 + message"
+      ],
+      "passed": true,
+      "file": "C:\\jh\\spring\\ch09\\board\\docs\\verification\\api\\06-get-deleted-404.txt"
+    },
+    {
+      "question": "10번 오류 대응",
+      "step": 7,
+      "name": "malformed-json-400",
+      "time": "2026-10-01T10:01:44.4220347+09:00",
+      "method": "POST",
+      "url": "http://localhost:18080/api/boards",
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Length": "9"
+      },
+      "requestBody": "{\"title\":",
+      "expectedStatus": 400,
+      "responseStatus": 400,
+      "responseReason": "",
+      "responseHeaders": {
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 01 Oct 2026 01:01:44 GMT",
+        "Connection": "close",
+        "Content-Type": "application/json"
+      },
+      "responseBody": "{\"status\":400,\"message\":\"JSON 요청 본문을 확인하세요. title, content, author 형식을 사용하세요.\"}",
+      "elapsedMs": 4,
+      "checks": [
+        "PASS: HTTP 400 기대 / 실제 400",
+        "PASS: JSON 문법 오류는 status400 + message"
+      ],
+      "passed": true,
+      "file": "C:\\jh\\spring\\ch09\\board\\docs\\verification\\api\\07-malformed-json-400.txt"
+    },
+    {
+      "question": "10번 오류 대응",
+      "step": 8,
+      "name": "blank-title-400",
+      "time": "2026-10-01T10:01:44.4385966+09:00",
+      "method": "POST",
+      "url": "http://localhost:18080/api/boards",
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Length": "91"
+      },
+      "requestBody": "{\"author\":\"API 오류 검증\",\"title\":\" \",\"content\":\"저장되지 않아야 하는 요청\"}",
+      "expectedStatus": 400,
+      "responseStatus": 400,
+      "responseReason": "",
+      "responseHeaders": {
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 01 Oct 2026 01:01:44 GMT",
+        "Connection": "close",
+        "Content-Type": "application/json"
+      },
+      "responseBody": "{\"status\":400,\"message\":\"title: 제목을 입력해 주세요.\"}",
+      "elapsedMs": 14,
+      "checks": [
+        "PASS: HTTP 400 기대 / 실제 400",
+        "PASS: 공백 제목은 title 필수값 검증 오류"
+      ],
+      "passed": true,
+      "file": "C:\\jh\\spring\\ch09\\board\\docs\\verification\\api\\08-blank-title-400.txt"
+    },
+    {
+      "question": "10번 오류 대응",
+      "step": 9,
+      "name": "invalid-id-400",
+      "time": "2026-10-01T10:01:44.4455392+09:00",
+      "method": "GET",
+      "url": "http://localhost:18080/api/boards/not-a-number",
+      "requestHeaders": {
+        "Accept": "application/json"
+      },
+      "requestBody": "",
+      "expectedStatus": 400,
+      "responseStatus": 400,
+      "responseReason": "",
+      "responseHeaders": {
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 01 Oct 2026 01:01:44 GMT",
+        "Connection": "close",
+        "Content-Type": "application/json"
+      },
+      "responseBody": "{\"status\":400,\"message\":\"게시글 id는 숫자로 입력하세요.\"}",
+      "elapsedMs": 4,
+      "checks": [
+        "PASS: HTTP 400 기대 / 실제 400",
+        "PASS: 숫자가 아닌 id는 status400 + message"
+      ],
+      "passed": true,
+      "file": "C:\\jh\\spring\\ch09\\board\\docs\\verification\\api\\09-invalid-id-400.txt"
+    }
+  ],
+  "report": "C:\\jh\\spring\\ch09\\board\\docs\\verification\\api-report.html"
+}

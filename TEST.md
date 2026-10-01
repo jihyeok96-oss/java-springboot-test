@@ -3,7 +3,7 @@
 ========================================================================
 
 1. 프로젝트 및 PostgreSQL 접속 환경 구성
-   Spring Boot 4.x와 Java 21을 기준으로 Gradle 프로젝트를 구성하시오. PostgreSQL(5432)의 company 데이터베이스에 사용자 postgress, 비밀번호 1004로 접속하도록 application.yml을 작성하고, JPA/Hibernate와 Thymeleaf가 정상 동작하도록 필요한 의존성을 build.gradle에 추가하시오. 패키지는 com.example.board를 기준으로 한다.
+   Spring Boot 4.x와 Java 21을 기준으로 Gradle 프로젝트를 구성하시오. PostgreSQL(5432)의 company 데이터베이스에사용자 postgress, 비밀번호 1004로 접속하도록 application.yml을 작성하고, JPA/Hibernate와 Thymeleaf가 정상 동작하도록 필요한 의존성을 build.gradle에 추가하시오. 패키지는 com.example.board를 기준으로 한다.
 
 2. JPA 공통 설정 및 시간 처리 Configuration
    Board의 생성/수정 시각을 안정적으로 관리할 수 있도록 Configuration 클래스를 작성하시오. Java Time(ZoneId: Asia/Seoul)을 사용하는 Clock을 @Bean으로 등록하고, JPA Auditing을 활성화하시오. 애플리케이션에서 해당 Bean을 주입받아 사용할 수 있어야 한다.

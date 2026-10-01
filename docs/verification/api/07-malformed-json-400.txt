@@ -1,0 +1,22 @@
+10번 오류 대응 / malformed-json-400
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.4220347+09:00
+REQUEST
+POST http://localhost:18080/api/boards
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+Content-Length: 9
+
+{"title":
+
+RESPONSE
+HTTP 400 
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Connection: close
+Content-Type: application/json
+
+{"status":400,"message":"JSON 요청 본문을 확인하세요. title, content, author 형식을 사용하세요."}
+
+VERIFY
+PASS: HTTP 400 기대 / 실제 400
+PASS: JSON 문법 오류는 status400 + message

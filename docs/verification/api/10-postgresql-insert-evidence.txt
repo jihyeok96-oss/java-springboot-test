@@ -1,0 +1,8 @@
+10번 PostgreSQL 실제 저장 확인
+Database: company / Schema: board_exam_ch09
+SQL: SELECT id, title, content, author, hits, created_at, updated_at FROM board_exam_ch09.board WHERE id=2;
+
+ id |                        title                         |      content       |    author     | hits |          created_at           |          updated_at           
+----+------------------------------------------------------+--------------------+---------------+------+-------------------------------+-------------------------------
+  2 | 9번 API 검증 - 7de958361a6147cf909da64a66166b3c 수정 | 실제 PUT 수정 검증 | API 수정 검증 |    1 | 2026-10-01 10:01:44.149847+09 | 2026-10-01 10:01:44.261901+09
+(1 row)

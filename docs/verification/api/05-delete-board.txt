@@ -1,0 +1,17 @@
+9번 REST CRUD / delete-board
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.3937493+09:00
+REQUEST
+DELETE http://localhost:18080/api/boards/2
+Accept: application/json
+
+(본문 없음)
+
+RESPONSE
+HTTP 204 
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+
+(본문 없음)
+
+VERIFY
+PASS: HTTP 204 기대 / 실제 204
+PASS: 204 삭제 응답에는 본문 없음

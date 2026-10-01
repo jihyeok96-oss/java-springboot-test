@@ -1,0 +1,15 @@
+# 9번/10번. application-test.yml - 자동 검증 전용 설정
+# [수업 예제 외 추가] 실제 company DB를 변경하지 않고 JPA/MVC/REST를 함께 검증하는 H2 설정.
+# src/main/resources/application.yml의 평가문항 PostgreSQL 설정과 분리한다.
+spring:
+  datasource:
+    url: jdbc:h2:mem:board-test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ''
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  thymeleaf:
+    cache: false

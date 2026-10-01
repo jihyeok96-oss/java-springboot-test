@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--
+    [문항 6, 7, 10] 파일: templates/board/form.html
+    목적: 동일한 Thymeleaf 폼으로 등록과 수정을 처리하고 입력 오류를 필드 옆에 표시한다.
+    수업 참고:
+    - spring-practice-ans / templates/board/insert.html, edit.html: th:object, th:field, POST 폼.
+      https://github.com/jihyeok96-oss/spring-practice-ans/blob/master/src/main/resources/templates/board/insert.html
+      https://github.com/jihyeok96-oss/spring-practice-ans/blob/master/src/main/resources/templates/board/edit.html
+    - mvclab / templates/members/form.html: #fields.hasErrors, th:errors와 입력값 유지.
+      https://github.com/jihyeok96-oss/mvclab/blob/main/src/main/resources/templates/members/form.html
+    - ref-back / templates/qna/form.html: 하나의 파일에서 등록/수정 상태에 따라 제목과 action을 변경.
+      https://github.com/jihyeok96-oss/ref-back/blob/master/src/main/resources/templates/qna/form.html
+    [수업 예제 외 추가] 폼 상태 edit와 경로의 boardId를 별도 모델 값으로 받는다.
+    이유: 검증 실패로 다시 표시해도 수정 URL을 유지하고 사용자가 보낸 id를 신뢰하지 않기 위해서다.
+    title/author만 필수이며 content는 평가문제에서 필수라고 하지 않았으므로 선택 입력으로 둔다.
+-->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${edit ? '글 수정 - 게시판' : '글 등록 - 게시판'}">글 등록 - 게시판</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="site-header">
+    <nav class="container navigation" aria-label="주 메뉴">
+        <a class="brand" th:href="@{/boards}">게시판</a>
+        <div class="navigation-links">
+            <a th:href="@{/boards}">전체 글</a>
+            <a th:href="@{/boards/new}">글쓰기</a>
+        </div>
+    </nav>
+</header>
+<main class="container main-content form-card">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow" th:text="${edit ? 'EDIT' : 'WRITE'}">WRITE</p>
+            <h1 th:text="${edit ? '게시글 수정' : '새 게시글 등록'}">새 게시글 등록</h1>
+            <p class="subtitle" th:text="${edit ? '작성한 내용을 수정하고 저장하세요.' : '제목과 작성자를 입력하고 이야기를 남겨주세요.'}">
+                제목과 작성자를 입력하고 이야기를 남겨주세요.
+            </p>
+        </div>
+        <a class="text-link" th:href="@{/boards}">목록으로</a>
+    </div>
+
+    <section class="card editor-card" aria-label="게시글 입력">
+        <!-- [문항 7] 신규 POST /boards, 수정 POST /boards/{id}. 경로 id는 Controller가 관리한다. -->
+        <form th:object="${board}" method="post"
+              th:action="${edit} ? @{/boards/{id}(id=${boardId})} : @{/boards}">
+            <div class="form-introduction">
+                <p><span class="required-mark">*</span> 표시 항목은 필수입니다.</p>
+                <p class="muted" th:if="${edit}">게시글 번호 <strong th:text="${boardId}">1</strong></p>
+            </div>
+
+            <!-- [문항 3, 6, 10] title을 Board에 바인딩하고 Bean Validation 오류를 그대로 출력한다. -->
+            <div class="field">
+                <label for="title">제목 <span class="required-mark">*</span></label>
+                <input id="title" type="text" th:field="*{title}" maxlength="255"
+                       placeholder="제목을 입력하세요" required autofocus>
+                <p class="field-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">제목 오류</p>
+            </div>
+
+            <!-- [문항 3, 6] 작성자는 필수, 저장 가능한 길이에 맞춰 255자 이내로 입력한다. -->
+            <div class="field author-field">
+                <label for="author">작성자 <span class="required-mark">*</span></label>
+                <input id="author" type="text" th:field="*{author}" maxlength="255"
+                       placeholder="작성자 이름을 입력하세요" required>
+                <p class="field-error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">작성자 오류</p>
+            </div>
+
+            <!-- [문항 6] th:field가 신규 값과 기존 수정 값을 모두 textarea에 반영한다. -->
+            <div class="field">
+                <label for="content">내용 <span class="optional-label">선택</span></label>
+                <textarea id="content" th:field="*{content}" rows="12" placeholder="내용을 자유롭게 작성하세요"></textarea>
+                <p class="field-error" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">내용 오류</p>
+            </div>
+
+            <!-- [문항 10] 오류 시 같은 폼과 BindingResult를 반환하므로 입력한 내용을 잃지 않는다. -->
+            <p class="field-error" th:if="${#fields.hasGlobalErrors()}"
+               th:each="error : ${#fields.globalErrors()}" th:text="${error}">입력 오류</p>
+
+            <div class="form-actions">
+                <a class="btn btn-light"
+                   th:href="${edit} ? @{/boards/{id}(id=${boardId})} : @{/boards}">취소</a>
+                <div class="button-group">
+                    <button class="btn btn-light" type="reset">초기화</button>
+                    <button class="btn btn-primary" type="submit" th:text="${edit ? '수정 완료' : '게시글 등록'}">게시글 등록</button>
+                </div>
+            </div>
+        </form>
+    </section>
+</main>
+<footer class="site-footer"><p>게시판 · 서로의 생각을 나누는 공간</p></footer>
+</body>
+</html>

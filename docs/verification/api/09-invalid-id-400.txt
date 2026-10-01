@@ -1,0 +1,20 @@
+10번 오류 대응 / invalid-id-400
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.4455392+09:00
+REQUEST
+GET http://localhost:18080/api/boards/not-a-number
+Accept: application/json
+
+(본문 없음)
+
+RESPONSE
+HTTP 400 
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Connection: close
+Content-Type: application/json
+
+{"status":400,"message":"게시글 id는 숫자로 입력하세요."}
+
+VERIFY
+PASS: HTTP 400 기대 / 실제 400
+PASS: 숫자가 아닌 id는 status400 + message

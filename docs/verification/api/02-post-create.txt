@@ -1,0 +1,26 @@
+9번 REST CRUD / post-create
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.1816454+09:00
+REQUEST
+POST http://localhost:18080/api/boards
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+Content-Length: 122
+
+{"author":"API 검증","title":"9번 API 검증 - 7de958361a6147cf909da64a66166b3c","content":"실제 POST 등록 검증"}
+
+RESPONSE
+HTTP 201 
+Location: /api/boards/2
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Content-Type: application/json
+
+{"id":2,"title":"9번 API 검증 - 7de958361a6147cf909da64a66166b3c","content":"실제 POST 등록 검증","author":"API 검증","hits":0,"createdAt":"2026-10-01T10:01:44.1498469+09:00","updatedAt":"2026-10-01T10:01:44.1498469+09:00"}
+
+VERIFY
+PASS: HTTP 201 기대 / 실제 201
+PASS: 서버가 Long id를 자동 생성
+PASS: 한글 요청값이 UTF-8 JSON으로 저장
+PASS: 등록 조회수는 0
+PASS: 생성일시는 서울 시간 +09:00
+PASS: 201 Location에 생성된 API 주소 포함

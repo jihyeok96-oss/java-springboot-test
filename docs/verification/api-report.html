@@ -1,0 +1,190 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>9·10번 실제 API 검증</title><style>body{font-family:Arial,sans-serif;max-width:1100px;margin:32px auto;padding:0 16px;color:#172033;background:#f6f8fb}section{background:white;border:1px solid #d9e1ec;border-radius:8px;padding:20px;margin:20px 0}h1{font-size:26px}h2{font-size:18px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-family:Consolas,monospace;font-size:13px;line-height:1.5}</style></head><body><h1>9·10번 실제 REST API 검증</h1><p>실제 실행 결과: PASS</p><p>실행 주소: http://localhost:18080 / 시각: 2026-10-01T10:01:43.9509589+09:00</p><p>PowerShell HttpClient로 전송한 실제 Method, URL, Header, Body, 상태 코드와 JSON 응답입니다.</p><p>이 실행에서 생성한 게시글만 수정·삭제했습니다. 성공 표시가 없는 항목은 검증 완료를 의미하지 않습니다.</p><p>생성일시 보존은 POST의 Java 나노초와 DB의 마이크로초 정밀도 차이 때문에 실제 시점 차이를 1마이크로초(10 ticks) 이하로 비교합니다.</p><section><h2>01. get-list — 실제 HTTP 200</h2><pre>9번 REST CRUD / get-list
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.0398564+09:00
+REQUEST
+GET http://localhost:18080/api/boards
+Accept: application/json
+
+(본문 없음)
+
+RESPONSE
+HTTP 200 
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Content-Type: application/json
+
+[]
+
+VERIFY
+PASS: HTTP 200 기대 / 실제 200
+PASS: 목록 응답은 JSON 배열</pre></section>
+<section><h2>02. post-create — 실제 HTTP 201</h2><pre>9번 REST CRUD / post-create
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.1816454+09:00
+REQUEST
+POST http://localhost:18080/api/boards
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+Content-Length: 122
+
+{&quot;author&quot;:&quot;API 검증&quot;,&quot;title&quot;:&quot;9번 API 검증 - 7de958361a6147cf909da64a66166b3c&quot;,&quot;content&quot;:&quot;실제 POST 등록 검증&quot;}
+
+RESPONSE
+HTTP 201 
+Location: /api/boards/2
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Content-Type: application/json
+
+{&quot;id&quot;:2,&quot;title&quot;:&quot;9번 API 검증 - 7de958361a6147cf909da64a66166b3c&quot;,&quot;content&quot;:&quot;실제 POST 등록 검증&quot;,&quot;author&quot;:&quot;API 검증&quot;,&quot;hits&quot;:0,&quot;createdAt&quot;:&quot;2026-10-01T10:01:44.1498469+09:00&quot;,&quot;updatedAt&quot;:&quot;2026-10-01T10:01:44.1498469+09:00&quot;}
+
+VERIFY
+PASS: HTTP 201 기대 / 실제 201
+PASS: 서버가 Long id를 자동 생성
+PASS: 한글 요청값이 UTF-8 JSON으로 저장
+PASS: 등록 조회수는 0
+PASS: 생성일시는 서울 시간 +09:00
+PASS: 201 Location에 생성된 API 주소 포함</pre></section>
+<section><h2>03. put-update — 실제 HTTP 200</h2><pre>9번 REST CRUD / put-update
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.2302740+09:00
+REQUEST
+PUT http://localhost:18080/api/boards/2
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+Content-Length: 135
+
+{&quot;author&quot;:&quot;API 수정 검증&quot;,&quot;title&quot;:&quot;9번 API 검증 - 7de958361a6147cf909da64a66166b3c 수정&quot;,&quot;content&quot;:&quot;실제 PUT 수정 검증&quot;}
+
+RESPONSE
+HTTP 200 
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Content-Type: application/json
+
+{&quot;id&quot;:2,&quot;title&quot;:&quot;9번 API 검증 - 7de958361a6147cf909da64a66166b3c 수정&quot;,&quot;content&quot;:&quot;실제 PUT 수정 검증&quot;,&quot;author&quot;:&quot;API 수정 검증&quot;,&quot;hits&quot;:0,&quot;createdAt&quot;:&quot;2026-10-01T10:01:44.149847+09:00&quot;,&quot;updatedAt&quot;:&quot;2026-10-01T10:01:44.2201697+09:00&quot;}
+
+VERIFY
+PASS: HTTP 200 기대 / 실제 200
+PASS: 수정 시 기존 id 보존
+PASS: title/content/author 수정 반영
+PASS: 수정 시 조회수 보존
+PASS: 수정 시 기존 생성일시 보존(정밀도 오차 1마이크로초 이하)</pre></section>
+<section><h2>04. get-detail — 실제 HTTP 200</h2><pre>9번 REST CRUD / get-detail
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.2692300+09:00
+REQUEST
+GET http://localhost:18080/api/boards/2
+Accept: application/json
+
+(본문 없음)
+
+RESPONSE
+HTTP 200 
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Content-Type: application/json
+
+{&quot;id&quot;:2,&quot;title&quot;:&quot;9번 API 검증 - 7de958361a6147cf909da64a66166b3c 수정&quot;,&quot;content&quot;:&quot;실제 PUT 수정 검증&quot;,&quot;author&quot;:&quot;API 수정 검증&quot;,&quot;hits&quot;:1,&quot;createdAt&quot;:&quot;2026-10-01T10:01:44.149847+09:00&quot;,&quot;updatedAt&quot;:&quot;2026-10-01T10:01:44.261901+09:00&quot;}
+
+VERIFY
+PASS: HTTP 200 기대 / 실제 200
+PASS: 상세에서 수정 결과 확인
+PASS: 단건 조회로 조회수가 정확히 1 증가
+PASS: DB 재조회 후 생성/수정일시도 +09:00</pre></section>
+<section><h2>05. delete-board — 실제 HTTP 204</h2><pre>9번 REST CRUD / delete-board
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.3937493+09:00
+REQUEST
+DELETE http://localhost:18080/api/boards/2
+Accept: application/json
+
+(본문 없음)
+
+RESPONSE
+HTTP 204 
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+
+(본문 없음)
+
+VERIFY
+PASS: HTTP 204 기대 / 실제 204
+PASS: 204 삭제 응답에는 본문 없음</pre></section>
+<section><h2>06. get-deleted-404 — 실제 HTTP 404</h2><pre>10번 오류 대응 / get-deleted-404
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.4135640+09:00
+REQUEST
+GET http://localhost:18080/api/boards/2
+Accept: application/json
+
+(본문 없음)
+
+RESPONSE
+HTTP 404 
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Content-Type: application/json
+
+{&quot;status&quot;:404,&quot;message&quot;:&quot;2번 게시글을 찾을 수 없습니다.&quot;}
+
+VERIFY
+PASS: HTTP 404 기대 / 실제 404
+PASS: 없는 글 오류 JSON은 status404 + message</pre></section>
+<section><h2>07. malformed-json-400 — 실제 HTTP 400</h2><pre>10번 오류 대응 / malformed-json-400
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.4220347+09:00
+REQUEST
+POST http://localhost:18080/api/boards
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+Content-Length: 9
+
+{&quot;title&quot;:
+
+RESPONSE
+HTTP 400 
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Connection: close
+Content-Type: application/json
+
+{&quot;status&quot;:400,&quot;message&quot;:&quot;JSON 요청 본문을 확인하세요. title, content, author 형식을 사용하세요.&quot;}
+
+VERIFY
+PASS: HTTP 400 기대 / 실제 400
+PASS: JSON 문법 오류는 status400 + message</pre></section>
+<section><h2>08. blank-title-400 — 실제 HTTP 400</h2><pre>10번 오류 대응 / blank-title-400
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.4385966+09:00
+REQUEST
+POST http://localhost:18080/api/boards
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+Content-Length: 91
+
+{&quot;author&quot;:&quot;API 오류 검증&quot;,&quot;title&quot;:&quot; &quot;,&quot;content&quot;:&quot;저장되지 않아야 하는 요청&quot;}
+
+RESPONSE
+HTTP 400 
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Connection: close
+Content-Type: application/json
+
+{&quot;status&quot;:400,&quot;message&quot;:&quot;title: 제목을 입력해 주세요.&quot;}
+
+VERIFY
+PASS: HTTP 400 기대 / 실제 400
+PASS: 공백 제목은 title 필수값 검증 오류</pre></section>
+<section><h2>09. invalid-id-400 — 실제 HTTP 400</h2><pre>10번 오류 대응 / invalid-id-400
+실제 실행 시각(Asia/Seoul): 2026-10-01T10:01:44.4455392+09:00
+REQUEST
+GET http://localhost:18080/api/boards/not-a-number
+Accept: application/json
+
+(본문 없음)
+
+RESPONSE
+HTTP 400 
+Transfer-Encoding: chunked
+Date: Thu, 01 Oct 2026 01:01:44 GMT
+Connection: close
+Content-Type: application/json
+
+{&quot;status&quot;:400,&quot;message&quot;:&quot;게시글 id는 숫자로 입력하세요.&quot;}
+
+VERIFY
+PASS: HTTP 400 기대 / 실제 400
+PASS: 숫자가 아닌 id는 status400 + message</pre></section></body></html>
